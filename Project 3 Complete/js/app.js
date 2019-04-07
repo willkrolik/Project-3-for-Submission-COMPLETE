@@ -270,20 +270,6 @@ function validateCvv() {
 }
 $("#contact_cvv").on("input", validateCvv);
 
-/*function notCC() {
-  if ($("#paypal option: selected") || $("#bitcoin option: selected")) 
-  $("#payment").change(function(event) {
-    console.log("not a cc");
-    $("#contact_cc-num")
-      .removeClass("invalid")
-      .addClass("valid");
-    $("#contact_zip")
-      .removeClass("invalid")
-      .addClass("valid");
-    $("#contact_cvv")
-      .removeClass("invalid")
-      .addClass("valid");
-  })*/
 
 //Function
 $("#contact_submit button").click(function(event) {
