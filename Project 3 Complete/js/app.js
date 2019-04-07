@@ -4,12 +4,17 @@
 
 $("input:text:visible:first").focus();
 
+$("#cf_1268591").attr("readonly", "readonly");
+
+$(document).ready(function() {
+  $("#credit_card").prop("selected", true);
+});
+
 $(document).ready(function() {
   $("#other_field")
     .attr("selected", false)
     .attr("hidden", true);
 });
-
 
 //Hides the other field until other is selected, this method displays the field if JS is disabled
 $("#title").change(function() {
@@ -52,7 +57,7 @@ $("#design").change(function() {
       .attr("hidden", false);
   }
 });
-//Used to create total and add as boxes are checked. 
+//Used to create total and add as boxes are checked.
 //howdy and yall exist to see if button clicks are being logged for future functionality
 $("input:checkbox").change(function() {
   var total = 0;
@@ -201,27 +206,32 @@ function validateEmail() {
 }
 
 //checkbox must have something checked
-function validateCheckBox(){
-var input =$(":checkbox");
-var output = $("#makeMeRed");
-if ($("#contact input:checkbox:checked").length > 0) {
-  return true;
+function validateCheckBox() {
+  var input = $(":checkbox");
+  var output = $("#makeMeRed");
+  if ($("#contact input:checkbox:checked").length > 0) {
+    return true;
+  } else {
+    output.addClass("red");
+    return false;
+  }
 }
-else
-{
-
-  output.addClass("red");
-  return false;
-}}
-
 
 $("#contact_email").on("input", validateEmail);
+
+function paymentInfoNotRequired() {
+  return (
+    $("#payment option:selected").text() === "PayPal" ||
+    $("#payment option:selected").text() === "Bitcoin"
+  );
+}
 // must be valid cc number
 function validateCreditCard() {
   var input = $("#contact_cc-num");
   var re = /[0-9]{4} {0,1}[0-9]{4} {0,1}[0-9]{4} {0,1}[0-9]{4}/;
   var is_ccnum = re.test(input.val());
-  if (is_ccnum) {
+  console.log($("#payment option:selected").text());
+  if (is_ccnum || paymentInfoNotRequired()) {
     input.removeClass("invalid").addClass("valid");
     return true;
   } else {
@@ -235,7 +245,7 @@ function validateZipCode() {
   var input = $("#contact_zip");
   var re = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
   var is_zip = re.test(input.val());
-  if (is_zip) {
+  if (is_zip || paymentInfoNotRequired()) {
     input.removeClass("invalid").addClass("valid");
     return true;
   } else {
@@ -250,7 +260,7 @@ function validateCvv() {
   var input = $("#contact_cvv");
   var re = /^[0-9]{3,4}$/;
   var is_cvv = re.test(input.val());
-  if (is_cvv) {
+  if (is_cvv || paymentInfoNotRequired()) {
     input.removeClass("invalid").addClass("valid");
     return true;
   } else {
@@ -259,7 +269,23 @@ function validateCvv() {
   }
 }
 $("#contact_cvv").on("input", validateCvv);
-//Function 
+
+/*function notCC() {
+  if ($("#paypal option: selected") || $("#bitcoin option: selected")) 
+  $("#payment").change(function(event) {
+    console.log("not a cc");
+    $("#contact_cc-num")
+      .removeClass("invalid")
+      .addClass("valid");
+    $("#contact_zip")
+      .removeClass("invalid")
+      .addClass("valid");
+    $("#contact_cvv")
+      .removeClass("invalid")
+      .addClass("valid");
+  })*/
+
+//Function
 $("#contact_submit button").click(function(event) {
   var isValidName = validateName();
   var isValidEmail = validateEmail();
@@ -267,8 +293,23 @@ $("#contact_submit button").click(function(event) {
   var isValidZipCode = validateZipCode();
   var isValidCvv = validateCvv();
   var isValidCheckBox = validateCheckBox();
-    console.log(isValidName, isValidEmail, isValidCreditCard, isValidZipCode, isValidCvv, isValidCheckBox);
-  if (!isValidName || !isValidEmail || !isValidCreditCard || !isValidZipCode || !isValidCvv || !isValidCheckBox) {
+  /*notCC();*/
+  console.log(
+    isValidName,
+    isValidEmail,
+    isValidCreditCard,
+    isValidZipCode,
+    isValidCvv,
+    isValidCheckBox
+  );
+  if (
+    !isValidName ||
+    !isValidEmail ||
+    !isValidCreditCard ||
+    !isValidZipCode ||
+    !isValidCvv ||
+    !isValidCheckBox
+  ) {
     event.preventDefault();
   }
 });
